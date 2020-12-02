@@ -11,7 +11,6 @@ namespace DataBaseApi.Services
     public class BooksService : ControllerBase, IBooksService
     {
         private readonly BooksContext _db;
-        public static List<string> Statistic = new List<string>();
 
         public BooksService(BooksContext db)
         {
