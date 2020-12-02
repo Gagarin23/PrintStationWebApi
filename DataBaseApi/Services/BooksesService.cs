@@ -11,11 +11,13 @@ namespace DataBaseApi.Services
     public class BooksService : ControllerBase, IBooksService
     {
         private readonly BooksContext _db;
+        public static List<string> Statistic = new List<string>();
 
         public BooksService(BooksContext db)
         {
             _db = db;
         }
+
         public async Task<ActionResult<IEnumerable<Book>>> GetBooks(IEnumerable<string> barcodes)
         {
             if (barcodes == null)
@@ -66,7 +68,7 @@ namespace DataBaseApi.Services
             return Ok(book);
         }
 
-        public async Task<ActionResult<Book>> DeleteBook(string barcode)
+        public async Task<ActionResult<string>> DeleteBook(string barcode)
         {
             if (barcode == null)
                 return BadRequest();

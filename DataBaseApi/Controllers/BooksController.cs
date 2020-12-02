@@ -19,9 +19,19 @@ namespace DataBaseApi.Controllers
         }
 
         [HttpGet]
-        public Task<ActionResult<IEnumerable<Book>>> FindBooks(IEnumerable<string> barcodes)
-        {
-            return _booksService.GetBooks(barcodes);
-        }
+        public Task<ActionResult<IEnumerable<Book>>> FindBooks(IEnumerable<string> barcodes) =>
+            _booksService.GetBooks(barcodes);
+
+        [HttpPost]
+        public Task<ActionResult<IEnumerable<Book>>> AddBooks(IEnumerable<Book> books) =>
+            _booksService.AddBooks(books);
+
+        [HttpPatch]
+        public Task<ActionResult<Book>> ChangeBookState(Book book) =>
+            _booksService.ChangeBookState(book);
+
+        [HttpDelete]
+        public Task<ActionResult<string>> DeleteBook(string barcode) =>
+            _booksService.DeleteBook(barcode);
     }
 }

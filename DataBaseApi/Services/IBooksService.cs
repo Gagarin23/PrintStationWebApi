@@ -10,6 +10,6 @@ namespace DataBaseApi.Services
         Task<ActionResult<IEnumerable<Book>>> GetBooks(IEnumerable<string> barcodes);
         Task<ActionResult<IEnumerable<Book>>> AddBooks(IEnumerable<Book> books);
         Task<ActionResult<Book>> ChangeBookState(Book book);
-        Task<ActionResult<Book>> DeleteBook(string barcode);
+        Task<ActionResult<string>> DeleteBook(string barcode);
     }
 }
