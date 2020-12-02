@@ -2,7 +2,13 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DataBaseApi\DataBaseApi.csproj" />
+    <ProjectReference Include="..\PrintStationWebApi\PrintStationWebApi.csproj" />
+    <ProjectReference Include="..\ServerCashe\ServerCashe.csproj" />
+  </ItemGroup>
 
 </Project>

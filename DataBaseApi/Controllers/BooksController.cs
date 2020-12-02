@@ -7,7 +7,9 @@ using Microsoft.Extensions.Logging;
 
 namespace DataBaseApi.Controllers
 {
-    public class BooksController
+    [Route("api/[controller]")]
+    [ApiController]
+    public class BooksController : ControllerBase
     {
         private readonly ILogger _logger;
         private readonly IBooksService _booksService;
