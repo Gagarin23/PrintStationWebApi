@@ -11,7 +11,7 @@ namespace DataBaseApi.Migrations
                 name: "Books",
                 columns: table => new
                 {
-                    Barcode = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Barcode = table.Column<string>(type: "bigint", nullable: false),
                     BlockPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CoverPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BlockCreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),

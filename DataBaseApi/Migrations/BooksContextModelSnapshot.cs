@@ -22,7 +22,7 @@ namespace DataBaseApi.Migrations
             modelBuilder.Entity("DataBaseApi.Models.Book", b =>
                 {
                     b.Property<string>("Barcode")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("BlockCreationTime")
                         .HasColumnType("datetime2");

@@ -49,7 +49,7 @@ namespace ServerCashe.Services
             if (result == null)
                 return NotFound();
 
-            return Ok();
+            return Ok(result);
         }
 
         private IEnumerable<Book> GetBooks(params string[] barcodes)

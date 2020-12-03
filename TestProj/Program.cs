@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
 using DataBaseApi.Models;
 using ServerCashe.Services;
 
@@ -8,22 +12,38 @@ namespace TestProj
 {
     class Program
     {
+        static HttpClient client = new HttpClient();
+
         static void Main(string[] args)
         {
-
-            Console.ReadLine();
+            RunAsync().GetAwaiter().GetResult();
         }
 
-        static void Test(IEnumerable<string> str)
+        static async Task RunAsync()
         {
-            var enumerable = str.ToList();
-            if (!enumerable.Any())
+            client.BaseAddress = new Uri("http://localhost:5000");
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            try
             {
-                foreach (var txt in enumerable)
+                await CreateBookAsync(new Book
                 {
-                    Console.WriteLine(txt);
-                }
+                    Barcode = 9785458756982
+                });
             }
+            catch
+            {
+
+            }
+        }
+        static async Task<Uri> CreateBookAsync(Book book)
+        {
+            HttpResponseMessage response = await client.PostAsJsonAsync(
+                "api/Cashe", book);
+            response.EnsureSuccessStatusCode();
+
+            return response.Headers.Location;
         }
     }
 }

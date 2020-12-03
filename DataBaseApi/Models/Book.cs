@@ -9,7 +9,8 @@ namespace DataBaseApi.Models
     public class Book : IEquatable<Book>
     {
         [Key]
-        public string Barcode { get; set; }
+        [Range(9785000000000, 9785999999999, ErrorMessage = "Неверный ISBN.")]
+        public long Barcode { get; set; }
 
         public string BlockPath { get; set; }
 

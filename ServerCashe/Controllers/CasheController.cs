@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DataBaseApi.Models;
 using Microsoft.Extensions.Logging;
 using ServerCashe.Services;
 
@@ -24,14 +26,11 @@ namespace ServerCashe.Controllers
         }
 
         [HttpGet]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        public Task<ActionResult<IEnumerable<Book>>> Get(IEnumerable<string> barcodes) =>
+            _booksCasheService.GetBooksFromCashe(barcodes);
 
         [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+        public Task<ActionResult<IEnumerable<Book>>> Post(IEnumerable<Book> books) =>
+            _booksCasheService.AddBooksToCashe(books);
     }
 }

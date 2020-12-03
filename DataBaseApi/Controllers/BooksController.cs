@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DataBaseApi.Models;
 using DataBaseApi.Services;
@@ -11,29 +12,66 @@ namespace DataBaseApi.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
-        private readonly ILogger _logger;
         private readonly IBooksService _booksService;
 
-        public BooksController(ILogger logger, IBooksService booksService)
+        public BooksController(IBooksService booksService)
         {
-            _logger = logger;
             _booksService = booksService;
         }
 
         [HttpGet]
-        public Task<ActionResult<IEnumerable<Book>>> FindBooks(IEnumerable<string> barcodes) =>
-            _booksService.GetBooks(barcodes);
+        public async Task<ActionResult<IEnumerable<Book>>> FindBooks([FromQuery] params long[] barcodes)
+        {
+            if (barcodes == null)
+                return BadRequest();
+
+            if (barcodes.Length < 1)
+                return BadRequest();
+
+            var books = _booksService.GetBooks(barcodes);
+            return new ObjectResult(books.Result);
+        }
 
         [HttpPost]
-        public Task<ActionResult<IEnumerable<Book>>> AddBooks(IEnumerable<Book> books) =>
-            _booksService.AddBooks(books);
+        public async Task<ActionResult<IEnumerable<Book>>> AddBooks(params Book[] books)
+        {
+            if (books == null)
+                return BadRequest();
+
+            if (books.Length < 1)
+                return BadRequest();
+
+            var isComplite = await _booksService.AddBooks(books);
+            if (isComplite)
+                return Ok();
+            
+            return StatusCode(500);
+        }
 
         [HttpPatch]
-        public Task<ActionResult<Book>> ChangeBookState(Book book) =>
-            _booksService.ChangeBookState(book);
+        public async Task<ActionResult<Book>> ChangeBookState(Book book)
+        {
+            if (book == null)
+                return BadRequest();
+
+            var isComplite = await _booksService.ChangeBookState(book);
+            if (isComplite)
+                return Ok();
+            
+            return StatusCode(500);
+        }
 
         [HttpDelete]
-        public Task<ActionResult<string>> DeleteBook(string barcode) =>
-            _booksService.DeleteBook(barcode);
+        public async Task<ActionResult<long>> DeleteBook(long barcode)
+        {
+            if (barcode == 0)
+                return BadRequest();
+
+            var isComplite = await _booksService.DeleteBook(barcode);
+            if (isComplite)
+                return Ok();
+            
+            return StatusCode(500);
+        }
     }
 }

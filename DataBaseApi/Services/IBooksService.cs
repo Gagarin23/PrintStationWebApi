@@ -7,9 +7,9 @@ namespace DataBaseApi.Services
 {
     public interface IBooksService
     {
-        Task<ActionResult<IEnumerable<Book>>> GetBooks(IEnumerable<string> barcodes);
-        Task<ActionResult<IEnumerable<Book>>> AddBooks(IEnumerable<Book> books);
-        Task<ActionResult<Book>> ChangeBookState(Book book);
-        Task<ActionResult<string>> DeleteBook(string barcode);
+        Task<Book[]> GetBooks(long[] barcodes);
+        Task<bool> AddBooks(Book[] books);
+        Task<bool> ChangeBookState(Book book);
+        Task<bool> DeleteBook(long barcode);
     }
 }
