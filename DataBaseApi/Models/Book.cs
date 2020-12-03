@@ -37,7 +37,7 @@ namespace DataBaseApi.Models
 
         public override int GetHashCode()
         {
-            return (Barcode != null ? Barcode.GetHashCode() : 0);
+            return (Barcode.GetHashCode());
         }
     }
 }

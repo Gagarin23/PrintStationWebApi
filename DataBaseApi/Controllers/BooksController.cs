@@ -28,8 +28,8 @@ namespace DataBaseApi.Controllers
             if (barcodes.Length < 1)
                 return BadRequest();
 
-            var books = _booksService.GetBooks(barcodes);
-            return new ObjectResult(books.Result);
+            var books = await _booksService.GetBooks(barcodes);
+            return Ok(books);
         }
 
         [HttpPost]
@@ -41,11 +41,8 @@ namespace DataBaseApi.Controllers
             if (books.Length < 1)
                 return BadRequest();
 
-            var isComplite = await _booksService.AddBooks(books);
-            if (isComplite)
-                return Ok();
-            
-            return StatusCode(500);
+            await _booksService.AddBooks(books);
+            return StatusCode(201);
         }
 
         [HttpPatch]
@@ -54,11 +51,10 @@ namespace DataBaseApi.Controllers
             if (book == null)
                 return BadRequest();
 
-            var isComplite = await _booksService.ChangeBookState(book);
-            if (isComplite)
+            book = await _booksService.ChangeBookState(book);
+            if(book != null)
                 return Ok();
-            
-            return StatusCode(500);
+            return NotFound();
         }
 
         [HttpDelete]
@@ -67,11 +63,10 @@ namespace DataBaseApi.Controllers
             if (barcode == 0)
                 return BadRequest();
 
-            var isComplite = await _booksService.DeleteBook(barcode);
-            if (isComplite)
+            var book = await _booksService.DeleteBook(barcode);
+            if(book != null)
                 return Ok();
-            
-            return StatusCode(500);
+            return NotFound();
         }
     }
 }

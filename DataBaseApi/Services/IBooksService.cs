@@ -8,8 +8,8 @@ namespace DataBaseApi.Services
     public interface IBooksService
     {
         Task<Book[]> GetBooks(long[] barcodes);
-        Task<bool> AddBooks(Book[] books);
-        Task<bool> ChangeBookState(Book book);
-        Task<bool> DeleteBook(long barcode);
+        Task AddBooks(Book[] books);
+        Task<Book> ChangeBookState(Book book);
+        Task<Book> DeleteBook(long barcode);
     }
 }
