@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataBaseApi\DataBaseApi.csproj" />
     <ProjectReference Include="..\PrintStationWebApi\PrintStationWebApi.csproj" />
   </ItemGroup>
 
