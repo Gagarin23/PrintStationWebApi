@@ -15,8 +15,12 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PrintStationWebApi.Logger;
 using PrintStationWebApi.Models;
+using PrintStationWebApi.Models.BL;
 using PrintStationWebApi.Models.DataBase;
 using PrintStationWebApi.Services;
+using PrintStationWebApi.Services.BL;
+using PrintStationWebApi.Services.Cache;
+using PrintStationWebApi.Services.DataBase;
 
 namespace PrintStationWebApi
 {
@@ -34,9 +38,14 @@ namespace PrintStationWebApi
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<BooksContext>(options =>
                 options.UseSqlServer(connection));
-            services.AddScoped<IValidateService, ValidateService>();
-            services.AddTransient<IBooksRepository, BooksRepository>();
+
             services.AddControllers();
+            services.AddMemoryCache();
+
+            services.AddScoped<IValidateService, ValidateService>();
+            services.AddTransient<IBookRepository, BookRepository>();
+            services.AddSingleton<ICacheService, CacheService>();
+            services.AddScoped<IBookSortingService, BookSortingService>();
 
             services.AddSwaggerGen(c =>
             {

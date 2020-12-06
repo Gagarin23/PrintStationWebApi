@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using DataBaseApi.Models;
+using PrintStationWebApi.Models.BL;
 
 namespace TestProj
 {
@@ -26,10 +26,7 @@ namespace TestProj
 
             try
             {
-                await CreateBookAsync(new Book
-                {
-                    Barcode = 9785458756982
-                });
+                
             }
             catch
             {

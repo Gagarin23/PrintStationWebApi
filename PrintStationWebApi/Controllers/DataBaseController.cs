@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using PrintStationWebApi.Models;
 using PrintStationWebApi.Models.DataBase;
 using PrintStationWebApi.Services;
+using PrintStationWebApi.Services.DataBase;
 
 namespace PrintStationWebApi.Controllers
 {
@@ -13,12 +14,12 @@ namespace PrintStationWebApi.Controllers
     public class DataBaseController : ControllerBase
     {
         private readonly IValidateService _validateService;
-        private readonly IBooksRepository _booksRepository;
+        private readonly IBookRepository _bookRepository;
 
-        public DataBaseController(IValidateService validateService, IBooksRepository booksRepository)
+        public DataBaseController(IValidateService validateService, IBookRepository bookRepository)
         {
             _validateService = validateService;
-            _booksRepository = booksRepository;
+            _bookRepository = bookRepository;
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<InputBook>>> FindBooks([FromQuery] params string[] barcodes)
@@ -27,7 +28,13 @@ namespace PrintStationWebApi.Controllers
                 return BadRequest();
 
             var ids = _validateService.Parse(barcodes).ToArray();
-            var books = await _booksRepository.GetBooks(ids);
+            if (ids.Length < 1)
+                return NotFound();
+
+            var books = await _bookRepository.GetBooksAsync(ids);
+            if (books.Length < 1)
+                return NotFound();
+
             return Ok(books);
         }
 
@@ -38,7 +45,7 @@ namespace PrintStationWebApi.Controllers
                 return BadRequest();
 
             var dbBooks = _validateService.Validate(books).ToArray();
-            await _booksRepository.AddBooks(dbBooks);
+            await _bookRepository.AddBooksAsync(dbBooks);
             return StatusCode(201);
         }
 
@@ -49,7 +56,7 @@ namespace PrintStationWebApi.Controllers
                 return BadRequest();
 
             var dbBook = _validateService.Validate(book).FirstOrDefault();
-            dbBook = await _booksRepository.ChangeBookState(dbBook);
+            dbBook = await _bookRepository.ChangeBookStateAsync(dbBook);
             if(dbBook != null)
                 return Ok();
             return NotFound();
@@ -61,8 +68,8 @@ namespace PrintStationWebApi.Controllers
             if (barcode == null)
                 return BadRequest();
 
-            var id = _validateService.Parse(barcode).FirstOrDefault();
-            var book = await _booksRepository.DeleteBook(id);
+            var id = _validateService.Parse(barcode);
+            var book = await _bookRepository.DeleteBookAsync(id);
             if(book != null)
                 return Ok();
             return NotFound();

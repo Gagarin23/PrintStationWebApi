@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using PrintStationWebApi.Models.BL;
 
-namespace PrintStationWebApi.Services
+namespace PrintStationWebApi.Services.BL
 {
-    public interface IBookSortingService<T> where T : Book
+    public interface IBookSortingService
     {
-        List<T[]> Sort(T[] books);
+        List<T[]> Sort<T>(T[] books) where T : Book;
     }
 
-    public class BookSortingService<T> : IBookSortingService<T> where T : Book
+    public class BookSortingService : IBookSortingService
     {
-        public List<T[]> Sort(T[] books)
+        public List<T[]> Sort<T>(T[] books) where T : Book
         {
             var uniqBookParameters = books.Distinct().ToList();
             var queuesForPrinting = new List<T[]>();

@@ -5,8 +5,7 @@ namespace PrintStationWebApi.Models.DataBase
 {
     public class InputBook
     {
-        [Range(9785000000000, 9785999999999, ErrorMessage = "Неверный ISBN.")]
-        public long Barcode { get; set; }
+        public string Barcode { get; set; }
 
         public string BlockPath { get; set; }
 

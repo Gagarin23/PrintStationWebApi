@@ -1,16 +1,29 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace PrintStationWebApi.Models.BL
 {
     public abstract class Book : IEquatable<Book>
     {
-        public string Isbn { get; set; }
+        [Required]
+        public string Barcode { get; set; }
+
         public string Name { get; set; }
-        public int NumberOfCopies { get; set; }
+
+        [Required]
+        public short NumberOfCopies { get; set; }
+
+        [Required]
         public string BookFormat { get; set; }
+
+        [Required]
         public string BookMount { get; set; }
-        public int Imposition { get; set; }
+
+        [Required]
+        public byte Imposition { get; set; }
+
         public double PrintСoefficient { get; set; }
+
         public string FullPath { get; set; }
 
         public virtual bool Equals(Book other)
@@ -18,19 +31,19 @@ namespace PrintStationWebApi.Models.BL
             if (other == null)
                 return false;
 
-            if (Isbn == other.Isbn)
+            if (Barcode == other.Barcode)
                 return true;
 
             return false;
         }
         public override int GetHashCode()
         {
-            return Isbn == null ? 0 : Isbn.GetHashCode();
+            return Barcode == null ? 0 : Barcode.GetHashCode();
         }
 
         public override string ToString()
         {
-            return $"{Isbn}: {Name}";
+            return $"{Barcode}: {Name}";
         }
     }
 }

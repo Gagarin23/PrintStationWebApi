@@ -1,4 +1,5 @@
 ﻿using System;
+using PrintStationWebApi.Models.DataBase;
 
 namespace PrintStationWebApi.Models.BL
 {
@@ -33,11 +34,6 @@ namespace PrintStationWebApi.Models.BL
             var hashImposition = Imposition.GetHashCode();
 
             return hashLamination ^ hashBookFormat ^ hashBookMount ^ hashImposition;
-        }
-
-        public override string ToString()
-        {
-            return $"{Isbn}: {Name}";
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace PrintStationWebApi.Models.BL
 {
     public class Block : Book, IEquatable<Block>
     {
+        [Required]
         public string SheetFormat { get; set; }
 
         public bool Equals(Block other)
@@ -31,11 +33,6 @@ namespace PrintStationWebApi.Models.BL
             var hashSheetFormat = SheetFormat == null ? 0 : SheetFormat.GetHashCode();
 
             return hashBookFormat ^ hashBookMount ^ hashSheetFormat;
-        }
-
-        public override string ToString()
-        {
-            return Name;
         }
     }
 }

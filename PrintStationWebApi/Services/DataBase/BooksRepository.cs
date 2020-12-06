@@ -1,33 +1,38 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using PrintStationWebApi.Models;
 using PrintStationWebApi.Models.DataBase;
 
-namespace PrintStationWebApi.Services
+namespace PrintStationWebApi.Services.DataBase
 {
-    public interface IBooksRepository
+    public interface IBookRepository
     {
-        Task<DataBaseBook[]> GetBooks(long[] barcodes);
-        Task AddBooks(DataBaseBook[] books);
-        Task<DataBaseBook> ChangeBookState(DataBaseBook dataBaseBook);
-        Task<DataBaseBook> DeleteBook(long barcode);
+        Task<DataBaseBook> GetBookAsync(long barcode);
+        Task<DataBaseBook[]> GetBooksAsync(long[] barcodes);
+        Task AddBooksAsync(DataBaseBook[] books);
+        Task<DataBaseBook> ChangeBookStateAsync(DataBaseBook dataBaseBook);
+        Task<DataBaseBook> DeleteBookAsync(long barcode);
     }
 
-    public class BooksRepository : IBooksRepository
+    public class BookRepository : IBookRepository
     {
         private readonly BooksContext _db;
-        public BooksRepository(BooksContext db) //По хорошему надо передавать лишь один dbset, но в базе и так одна таблица.
+        public BookRepository(BooksContext db) //По хорошему надо передавать лишь один dbset, но в базе и так одна таблица.
         {
             _db = db;
         }
 
-        public async Task<DataBaseBook[]> GetBooks(long[] barcodes)
+        public async Task<DataBaseBook> GetBookAsync(long barcode)
+        {
+            return await _db.Books.FindAsync(barcode);
+        }
+
+        public async Task<DataBaseBook[]> GetBooksAsync(long[] barcodes)
         {
             return await _db.Books.Where(b => barcodes.Contains(b.Barcode)).ToArrayAsync();
         }
 
-        public async Task AddBooks(DataBaseBook[] books)
+        public async Task AddBooksAsync(DataBaseBook[] books)
         {
             var existingBooks = await _db.Books.Where(dbBook => books.Select(book => book.Barcode).Contains(dbBook.Barcode)).ToArrayAsync();
             if(existingBooks.Any())
@@ -37,7 +42,7 @@ namespace PrintStationWebApi.Services
             await _db.SaveChangesAsync();
         }
 
-        public async Task<DataBaseBook> ChangeBookState(DataBaseBook dataBaseBook)
+        public async Task<DataBaseBook> ChangeBookStateAsync(DataBaseBook dataBaseBook)
         {
             if (await _db.Books.FindAsync(dataBaseBook.Barcode) == null)
                 return null;
@@ -47,7 +52,7 @@ namespace PrintStationWebApi.Services
             return dataBaseBook;
         }
 
-        public async Task<DataBaseBook> DeleteBook(long barcode)
+        public async Task<DataBaseBook> DeleteBookAsync(long barcode)
         {
             var book = await _db.Books.FindAsync(barcode);
             if (book != null)
