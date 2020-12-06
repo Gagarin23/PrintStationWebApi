@@ -57,7 +57,8 @@ namespace PrintStationWebApi.Services.Cache
         {
             foreach (var barcode in barcodes)
             {
-                yield return _cache.Get<DataBaseBook>(barcode);
+                if(_cache.TryGetValue(barcode, out DataBaseBook dbBook))
+                    yield return dbBook;
             }
         }
     }

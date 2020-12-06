@@ -44,16 +44,6 @@ namespace PrintStationWebApi.Controllers
             _cacheService.AddRangeAsync(dbBooks); //Пусть задача улетает в параллельный поток, результат её здесь не важен.
 #pragma warning restore 4014
 
-            //covers = covers.Zip(dbBooks, (cover, book) => new Cover(cover, book));
-            //Можно было бы сделать конструктор для обложки под эти параметры.
-            //Выглядело бы красиво, но плодить копии коллекций не хочу. 
-            //Поэтому старый добрый for:
-
-            for (int i = 0; i < covers.Length; i++)
-            {
-                covers[i].FullPath = dbBooks[i].CoverPath;
-            }
-
             var sortedBooks = _sortingService.Sort(covers) ?? throw new ApplicationException(nameof(covers));
             return Ok(sortedBooks);
         }
