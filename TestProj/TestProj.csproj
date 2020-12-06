@@ -8,7 +8,6 @@
   <ItemGroup>
     <ProjectReference Include="..\DataBaseApi\DataBaseApi.csproj" />
     <ProjectReference Include="..\PrintStationWebApi\PrintStationWebApi.csproj" />
-    <ProjectReference Include="..\ServerCashe\ServerCashe.csproj" />
   </ItemGroup>
 
 </Project>
