@@ -32,7 +32,7 @@ namespace PrintStationWebApi.Controllers
                 return NotFound();
 
             var books = await _bookRepository.GetBooksAsync(ids);
-            if (books.Length < 1)
+            if (books.Count < 1)
                 return NotFound();
 
             return Ok(books);

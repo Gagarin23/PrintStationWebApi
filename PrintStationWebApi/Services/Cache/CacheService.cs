@@ -8,11 +8,11 @@ namespace PrintStationWebApi.Services.Cache
 {
     public interface ICacheService
     {
-        Task AddRangeAsync(DataBaseBook[] books);
-        void AddRange(DataBaseBook[] books);
+        Task AddRangeAsync(IEnumerable<DataBaseBook> books);
+        void AddRange(IEnumerable<DataBaseBook> books);
         void Add(DataBaseBook books);
         DataBaseBook GetBook(long barcode);
-        public IEnumerable<DataBaseBook> GetBooks(long[] barcodes);
+        public IEnumerable<DataBaseBook> GetBooks(IEnumerable<long> barcodes);
     }
 
     public class CacheService : ICacheService
@@ -24,12 +24,12 @@ namespace PrintStationWebApi.Services.Cache
             _cache = cache;
         }
 
-        public async Task AddRangeAsync(DataBaseBook[] books)
+        public async Task AddRangeAsync(IEnumerable<DataBaseBook> books)
         {
             await Task.Run(() => AddRange(books));
         }
 
-        public void AddRange(DataBaseBook[] books)
+        public void AddRange(IEnumerable<DataBaseBook> books)
         {
             foreach (var book in books)
             {
@@ -53,7 +53,7 @@ namespace PrintStationWebApi.Services.Cache
             return _cache.Get<DataBaseBook>(barcode);
         }
 
-        public IEnumerable<DataBaseBook> GetBooks(long[] barcodes)
+        public IEnumerable<DataBaseBook> GetBooks(IEnumerable<long> barcodes)
         {
             foreach (var barcode in barcodes)
             {

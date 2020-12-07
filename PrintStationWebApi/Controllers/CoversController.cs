@@ -35,16 +35,23 @@ namespace PrintStationWebApi.Controllers
             if (covers == null) 
                 return BadRequest();
 
-            var barcodes = _validateService.Parse(covers.Select(c => c.Barcode).ToArray()).ToArray();
-            var dbBooks = _cacheService.GetBooks(barcodes).ToArray();
-            if (dbBooks.Length < 1)
+            var barcodes = _validateService.Parse(covers.Select(c => c.Barcode)).ToList();
+            var dbBooks = _cacheService.GetBooks(barcodes).ToList();
+            if (dbBooks.Count < 1)
                 dbBooks = await _bookRepository.GetBooksAsync(barcodes);
 
 #pragma warning disable 4014
             _cacheService.AddRangeAsync(dbBooks); //Пусть задача улетает в параллельный поток, результат её здесь не важен.
 #pragma warning restore 4014
 
+            foreach (var cover in covers)
+            {
+                var barcode = _validateService.Parse(cover.Barcode);
+                cover.FullPath = dbBooks.FirstOrDefault(x => x.Barcode == barcode)?.CoverPath;
+            }
+
             var sortedBooks = _sortingService.Sort(covers) ?? throw new ApplicationException(nameof(covers));
+
             return Ok(sortedBooks);
         }
     }

@@ -10,18 +10,19 @@ namespace PrintStationWebApi.Services.DataBase
     {
         IEnumerable<DataBaseBook> Validate(params InputBook[] books);
         long Parse(string barcode);
-        IEnumerable<long> Parse(params string[] barcodes);
+        IEnumerable<long> Parse(IEnumerable<string> barcodes);
     }
 
     public class ValidateService : IValidateService
     {
         public IEnumerable<DataBaseBook> Validate(params InputBook[] InputBooks)
         {
-            var dbBook = new DataBaseBook();
             foreach (var inputBook in InputBooks)
             {
+                var dbBook = new DataBaseBook();
                 var barcode = Parse(inputBook.Barcode);
-                if (barcode != 0) dbBook.Barcode = barcode;
+                if (barcode != 0) 
+                    dbBook.Barcode = barcode;
 
                 if (Path.HasExtension(inputBook.BlockPath) 
                     && Path.GetExtension(inputBook.BlockPath).Equals(".pdf")
@@ -54,7 +55,7 @@ namespace PrintStationWebApi.Services.DataBase
             return 0;
         }
 
-        public IEnumerable<long> Parse(string[] barcodes)
+        public IEnumerable<long> Parse(IEnumerable<string> barcodes)
         {
             foreach (var barcode in barcodes)
             {

@@ -47,6 +47,8 @@ namespace PrintStationWebApi
             services.AddSingleton<ICacheService, CacheService>();
             services.AddScoped<IBookSortingService, BookSortingService>();
 
+            //todo: jwt авторизация
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PrintStation", Version = "v1" });

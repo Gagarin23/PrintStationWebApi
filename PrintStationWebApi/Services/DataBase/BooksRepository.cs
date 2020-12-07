@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PrintStationWebApi.Models.DataBase;
@@ -8,7 +9,7 @@ namespace PrintStationWebApi.Services.DataBase
     public interface IBookRepository
     {
         Task<DataBaseBook> GetBookAsync(long barcode);
-        Task<DataBaseBook[]> GetBooksAsync(long[] barcodes);
+        Task<List<DataBaseBook>> GetBooksAsync(IEnumerable<long> barcodes);
         Task AddBooksAsync(DataBaseBook[] books);
         Task<DataBaseBook> ChangeBookStateAsync(DataBaseBook dataBaseBook);
         Task<DataBaseBook> DeleteBookAsync(long barcode);
@@ -27,9 +28,9 @@ namespace PrintStationWebApi.Services.DataBase
             return await _db.Books.FindAsync(barcode);
         }
 
-        public async Task<DataBaseBook[]> GetBooksAsync(long[] barcodes)
+        public async Task<List<DataBaseBook>> GetBooksAsync(IEnumerable<long> barcodes)
         {
-            return await _db.Books.Where(b => barcodes.Contains(b.Barcode)).ToArrayAsync();
+            return await _db.Books.Where(b => barcodes.Contains(b.Barcode)).ToListAsync();
         }
 
         public async Task AddBooksAsync(DataBaseBook[] books)
