@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using PrintStationWebApi.Models.BL;
 using PrintStationWebApi.Models.DataBase;
 using PrintStationWebApi.Services;
@@ -29,6 +30,7 @@ namespace PrintStationWebApi.Controllers
             _cacheService = cacheService;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<List<Cover[]>>> CoverHandler(params Cover[] covers)
         {

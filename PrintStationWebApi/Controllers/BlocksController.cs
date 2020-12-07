@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using PrintStationWebApi.Models.BL;
 using PrintStationWebApi.Services.BL;
 using PrintStationWebApi.Services.Cache;
@@ -27,6 +28,7 @@ namespace PrintStationWebApi.Controllers
             _cacheService = cacheService;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<List<Block[]>>> BlockHandler(params Block[] blocks)
         {

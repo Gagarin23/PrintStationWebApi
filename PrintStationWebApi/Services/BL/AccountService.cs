@@ -14,26 +14,26 @@ using PrintStationWebApi.Services.DataBase;
 
 namespace PrintStationWebApi.Services.BL
 {
-    public interface IAuthenticationService
+    public interface IAccountService
     {
-        string Token(string username, string password);
+        Task<string> Token(string username, string password);
     }
 
-    public class AuthenticationService : IAuthenticationService
+    public class AccountService : IAccountService
     {
         private readonly IUsersRepository _usersRepository;
 
-        public AuthenticationService(IUsersRepository usersRepository)
+        public AccountService(IUsersRepository usersRepository)
         {
             _usersRepository = usersRepository;
         }
 
-        public string Token(string username, string password)
+        public async Task<string> Token(string username, string password)
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                 throw new ArgumentNullException("username or password null or empty.");
 
-            var identity = GetIdentity(username, password);
+            var identity = await GetIdentityAsync(username, password);
             if (identity == null)
                 throw new AuthenticationException();
  
@@ -55,9 +55,9 @@ namespace PrintStationWebApi.Services.BL
             return JsonSerializer.Serialize(response);
         }
  
-        private ClaimsIdentity GetIdentity(string username, string password)
+        private async Task<ClaimsIdentity> GetIdentityAsync(string username, string password)
         {
-            var user = _usersRepository.GetUserAsync(username, password).Result;
+            var user = await _usersRepository.GetUserAsync(username, password);
             if (user != null)
             {
                 var claims = new List<Claim>

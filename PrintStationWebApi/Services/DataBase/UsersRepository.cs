@@ -14,7 +14,9 @@ namespace PrintStationWebApi.Services.DataBase
     public interface IUsersRepository
     {
         Task<User> GetUserAsync(string login, string password);
-        Task SetUser(string login, string password, Role role);
+
+        /// <returns>Количество добавленных записей в базу.</returns>
+        Task<int> SetUserAsync(string login, string password, Role role);
     }
 
     public class UsersRepository : IUsersRepository
@@ -41,22 +43,20 @@ namespace PrintStationWebApi.Services.DataBase
 
             throw new AuthenticationException("Bad username or password.");
         }
-
-        public async Task SetUser(string username, string password, Role role)
+        
+        public async Task<int> SetUserAsync(string username, string password, Role role)
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                 throw new ArgumentNullException("username or password null or empty.");
 
             var passwordHash = Crypt.HashPassword(password);
             var user = new User(username, passwordHash){Role = role};
-            if (await _db.Users.FindAsync(user.Login) == null)
-            {
-                await _db.Users.AddAsync(user);
-                await _db.SaveChangesAsync();
-                return;
-            }
+            var a = await _db.Users.FindAsync(user.Login);
+            if (a != null) 
+                throw new DataException(user.Login + " уже существует.");
 
-            throw new DataException(user.Login + " уже существует.");
+            await _db.Users.AddAsync(user);
+            return await _db.SaveChangesAsync();
         }
 
         /// <summary>

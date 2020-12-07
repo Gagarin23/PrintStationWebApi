@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PrintStationWebApi.Models;
 using PrintStationWebApi.Models.DataBase;
@@ -22,6 +23,7 @@ namespace PrintStationWebApi.Controllers
             _bookRepository = bookRepository;
         }
 
+        [Authorize]
         [HttpGet("/search")]
         public async Task<ActionResult<IEnumerable<InputBook>>> FindBooks([FromQuery] params string[] barcodes)
         {
@@ -39,6 +41,7 @@ namespace PrintStationWebApi.Controllers
             return Ok(books);
         }
 
+        [Authorize]
         [HttpPost("/add")]
         public async Task<ActionResult<IEnumerable<InputBook>>> AddBooks(params InputBook[] books)
         {
@@ -50,6 +53,7 @@ namespace PrintStationWebApi.Controllers
             return StatusCode(201);
         }
 
+        [Authorize(Roles = "2")]
         [HttpPatch("/change")]
         public async Task<ActionResult<InputBook>> ChangeBookState(InputBook book)
         {
@@ -63,6 +67,7 @@ namespace PrintStationWebApi.Controllers
             return NotFound();
         }
 
+        [Authorize(Roles = "2")]
         [HttpDelete("/delete")]
         public async Task<ActionResult<long>> DeleteBook(string barcode)
         {
