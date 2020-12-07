@@ -12,7 +12,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using PrintStationWebApi.Authentication;
 using PrintStationWebApi.Logger;
 using PrintStationWebApi.Models;
 using PrintStationWebApi.Models.BL;
@@ -36,8 +39,20 @@ namespace PrintStationWebApi
         public void ConfigureServices(IServiceCollection services)
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<BooksContext>(options =>
+            services.AddDbContext<PrintStationContext>(options =>
                 options.UseSqlServer(connection));
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateLifetime = true,
+                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                        ValidateIssuerSigningKey = true,
+                    };
+                });
 
             services.AddControllers();
             services.AddMemoryCache();
@@ -46,8 +61,8 @@ namespace PrintStationWebApi
             services.AddTransient<IBookRepository, BookRepository>();
             services.AddSingleton<ICacheService, CacheService>();
             services.AddScoped<IBookSortingService, BookSortingService>();
-
-            //todo: jwt авторизация
+            services.AddTransient<IUsersRepository, UsersRepository>();
+            services.AddTransient<IAuthenticationService, AuthenticationService>();
 
             services.AddSwaggerGen(c =>
             {
@@ -67,6 +82,9 @@ namespace PrintStationWebApi
             loggerFactory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.txt"));
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

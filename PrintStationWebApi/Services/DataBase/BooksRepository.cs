@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -17,25 +18,35 @@ namespace PrintStationWebApi.Services.DataBase
 
     public class BookRepository : IBookRepository
     {
-        private readonly BooksContext _db;
-        public BookRepository(BooksContext db) //По хорошему надо передавать лишь один dbset, но в базе и так одна таблица.
+        private readonly PrintStationContext _db;
+
+        public BookRepository(PrintStationContext db)
         {
             _db = db;
         }
 
         public async Task<DataBaseBook> GetBookAsync(long barcode)
         {
+            if(barcode == 0)
+                throw new ArgumentException(nameof(barcode));
+
             return await _db.Books.FindAsync(barcode);
         }
 
         public async Task<List<DataBaseBook>> GetBooksAsync(IEnumerable<long> barcodes)
         {
+            if (barcodes == null || !barcodes.Any())
+                throw new ArgumentNullException(nameof(barcodes));
+
             return await _db.Books.Where(b => barcodes.Contains(b.Barcode)).ToListAsync();
         }
 
         public async Task AddBooksAsync(DataBaseBook[] books)
         {
-            var existingBooks = await _db.Books.Where(dbBook => books.Select(book => book.Barcode).Contains(dbBook.Barcode)).ToArrayAsync();
+            if (books == null || books.Length < 1)
+                throw new ArgumentNullException(nameof(books));
+
+            var existingBooks = await _db.Books.Where(dbBook => books.Select(book => book.Barcode).Contains(dbBook.Barcode)).ToListAsync();
             if(existingBooks.Any())
                 _db.Books.RemoveRange(existingBooks); //База мизерная, поэтому не замарачивался.
 
@@ -45,6 +56,9 @@ namespace PrintStationWebApi.Services.DataBase
 
         public async Task<DataBaseBook> ChangeBookStateAsync(DataBaseBook dataBaseBook)
         {
+            if (dataBaseBook == null)
+                throw new ArgumentNullException(nameof(dataBaseBook));
+
             if (await _db.Books.FindAsync(dataBaseBook.Barcode) == null)
                 return null;
 
@@ -55,6 +69,9 @@ namespace PrintStationWebApi.Services.DataBase
 
         public async Task<DataBaseBook> DeleteBookAsync(long barcode)
         {
+            if(barcode == 0)
+                throw new ArgumentException(nameof(barcode));
+
             var book = await _db.Books.FindAsync(barcode);
             if (book != null)
             {

@@ -32,7 +32,7 @@ namespace PrintStationWebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<List<Cover[]>>> CoverHandler(params Cover[] covers)
         {
-            if (covers == null) 
+            if (covers == null || covers.Length < 1) 
                 return BadRequest();
 
             var barcodes = _validateService.Parse(covers.Select(c => c.Barcode)).ToList();

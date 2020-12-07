@@ -30,7 +30,7 @@ namespace PrintStationWebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<List<Block[]>>> BlockHandler(params Block[] blocks)
         {
-            if (blocks == null) 
+            if (blocks == null || blocks.Length < 1) 
                 return BadRequest();
 
             var barcodes = _validateService.Parse(blocks.Select(c => c.Barcode)).ToList();

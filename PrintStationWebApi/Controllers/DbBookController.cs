@@ -11,12 +11,12 @@ namespace PrintStationWebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DataBaseController : ControllerBase
+    public class DbBookController : ControllerBase
     {
         private readonly IValidateService _validateService;
         private readonly IBookRepository _bookRepository;
 
-        public DataBaseController(IValidateService validateService, IBookRepository bookRepository)
+        public DbBookController(IValidateService validateService, IBookRepository bookRepository)
         {
             _validateService = validateService;
             _bookRepository = bookRepository;

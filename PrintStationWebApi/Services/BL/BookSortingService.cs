@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using PrintStationWebApi.Models.BL;
 
@@ -13,6 +14,9 @@ namespace PrintStationWebApi.Services.BL
     {
         public List<T[]> Sort<T>(T[] books) where T : Book
         {
+            if (books == null || books.Length < 1) 
+                throw new ArgumentNullException(nameof(books));
+
             var uniqBookParameters = books.Distinct().ToList();
             var queuesForPrinting = new List<T[]>();
 

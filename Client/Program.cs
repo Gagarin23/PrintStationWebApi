@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using PrintStationWebApi.Models.BL;
 
-namespace TestProj
+namespace Client
 {
     class Program
     {
@@ -15,7 +15,7 @@ namespace TestProj
 
         static void Main(string[] args)
         {
-
+            RunAsync().GetAwaiter().GetResult();
         }
 
         static async Task RunAsync()
@@ -23,6 +23,8 @@ namespace TestProj
             client.BaseAddress = new Uri("http://localhost:5000");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "xxxxxxxxxxxxxxxxxxxx");
+            
 
             try
             {
@@ -40,6 +42,23 @@ namespace TestProj
             response.EnsureSuccessStatusCode();
 
             return response.Headers.Location;
+        }
+
+        static void Test()
+        {
+            var request = new HttpRequestMessage {
+                RequestUri = new Uri("[your request url string]"),
+                Method = HttpMethod.Post,
+                Headers = 
+                {
+                    { "X-Version", "1" }, // HERE IS HOW TO ADD HEADERS,
+                    { HttpRequestHeader.Authorization.ToString(), "[your authorization token]" },
+                    { HttpRequestHeader.ContentType.ToString(), "multipart/mixed" },//use this content type if you want to send more than one content type
+                },
+                Content = new MultipartContent 
+                { 
+                }
+            };
         }
     }
 }

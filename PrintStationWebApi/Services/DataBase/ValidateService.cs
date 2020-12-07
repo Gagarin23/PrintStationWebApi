@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using PrintStationWebApi.Models.BL;
 using PrintStationWebApi.Models.DataBase;
 
@@ -8,16 +9,19 @@ namespace PrintStationWebApi.Services.DataBase
 {
     public interface IValidateService
     {
-        IEnumerable<DataBaseBook> Validate(params InputBook[] books);
+        IEnumerable<DataBaseBook> Validate(params InputBook[] inputBooks);
         long Parse(string barcode);
         IEnumerable<long> Parse(IEnumerable<string> barcodes);
     }
 
     public class ValidateService : IValidateService
     {
-        public IEnumerable<DataBaseBook> Validate(params InputBook[] InputBooks)
+        public IEnumerable<DataBaseBook> Validate(params InputBook[] inputBooks)
         {
-            foreach (var inputBook in InputBooks)
+            if(inputBooks == null || inputBooks.Length < 1)
+                throw new ArgumentNullException(nameof(inputBooks));
+
+            foreach (var inputBook in inputBooks)
             {
                 var dbBook = new DataBaseBook();
                 var barcode = Parse(inputBook.Barcode);
@@ -46,6 +50,9 @@ namespace PrintStationWebApi.Services.DataBase
 
         public long Parse(string barcode)
         {
+            if(string.IsNullOrEmpty(barcode))
+                throw new ArgumentNullException(nameof(barcode));
+
             long.TryParse(barcode.Replace("-", string.Empty).Replace("_", string.Empty), out long id);
             if (id > 9785000000000 && id < 9785999999999)
             {
@@ -57,6 +64,9 @@ namespace PrintStationWebApi.Services.DataBase
 
         public IEnumerable<long> Parse(IEnumerable<string> barcodes)
         {
+            if(barcodes == null || !barcodes.Any())
+                throw new ArgumentNullException(nameof(barcodes));
+
             foreach (var barcode in barcodes)
             {
                 long.TryParse(barcode.Replace("-", string.Empty).Replace("_", string.Empty), out long id);

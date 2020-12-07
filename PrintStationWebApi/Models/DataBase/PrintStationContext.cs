@@ -2,11 +2,12 @@
 
 namespace PrintStationWebApi.Models.DataBase
 {
-    public sealed class BooksContext : DbContext
+    public sealed class PrintStationContext : DbContext
     {
         public DbSet<DataBaseBook> Books { get; set; }
+        public DbSet<User> Users { get; set; }
 
-        public BooksContext(DbContextOptions<BooksContext> options) : base(options)
+        public PrintStationContext(DbContextOptions<PrintStationContext> options) : base(options)
         {
             Database.EnsureCreated();
         }
