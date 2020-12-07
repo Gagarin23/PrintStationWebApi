@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using PrintStationWebApi.Models.BL;
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using PrintStationWebApi.Models.BL;
 
 namespace TestProj
 {
@@ -26,7 +24,7 @@ namespace TestProj
 
             try
             {
-                
+
             }
             catch
             {

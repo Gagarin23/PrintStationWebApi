@@ -1,29 +1,20 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using PrintStationWebApi.Authentication;
 using PrintStationWebApi.Logger;
-using PrintStationWebApi.Models;
-using PrintStationWebApi.Models.BL;
 using PrintStationWebApi.Models.DataBase;
-using PrintStationWebApi.Services;
 using PrintStationWebApi.Services.BL;
 using PrintStationWebApi.Services.Cache;
 using PrintStationWebApi.Services.DataBase;
+using System.IO;
 
 namespace PrintStationWebApi
 {
@@ -54,28 +45,30 @@ namespace PrintStationWebApi
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { 
-                    Title = "PrintStationApi", 
-                    Version = "v1" 
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "PrintStationApi",
+                    Version = "v1"
                 });
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
-                    In = ParameterLocation.Header, 
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
                     Description = "Please insert JWT with Bearer into field",
                     Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey 
+                    Type = SecuritySchemeType.ApiKey
                 });
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement {
-                    { 
-                        new OpenApiSecurityScheme 
-                        { 
-                            Reference = new OpenApiReference 
-                            { 
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
                                 Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer" 
-                            } 
+                                Id = "Bearer"
+                            }
                         },
-                        new string[] { } 
-                    } 
+                        new string[] { }
+                    }
                 });
             });
 
@@ -87,11 +80,11 @@ namespace PrintStationWebApi
                     {
                         ValidateIssuer = true,
                         ValidIssuer = AuthOptions.Issuer,
- 
+
                         ValidateAudience = true,
                         ValidAudience = AuthOptions.Audience,
                         ValidateLifetime = true,
- 
+
                         IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
                         ValidateIssuerSigningKey = true,
                     };

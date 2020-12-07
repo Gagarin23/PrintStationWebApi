@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PrintStationWebApi.Models.BL;
 using PrintStationWebApi.Services.BL;
 using PrintStationWebApi.Services.Cache;
 using PrintStationWebApi.Services.DataBase;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PrintStationWebApi.Controllers
 {
@@ -32,7 +32,7 @@ namespace PrintStationWebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<List<Block[]>>> BlockHandler(params Block[] blocks)
         {
-            if (blocks == null || blocks.Length < 1) 
+            if (blocks == null || blocks.Length < 1)
                 return BadRequest();
 
             var barcodes = _validateService.Parse(blocks.Select(c => c.Barcode)).ToList();

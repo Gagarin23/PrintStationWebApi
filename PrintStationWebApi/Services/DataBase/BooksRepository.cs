@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using PrintStationWebApi.Models.DataBase;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using PrintStationWebApi.Models.DataBase;
 
 namespace PrintStationWebApi.Services.DataBase
 {
@@ -27,7 +27,7 @@ namespace PrintStationWebApi.Services.DataBase
 
         public async Task<DataBaseBook> GetBookAsync(long barcode)
         {
-            if(barcode == 0)
+            if (barcode == 0)
                 throw new ArgumentException(nameof(barcode));
 
             return await _db.Books.FindAsync(barcode);
@@ -47,7 +47,7 @@ namespace PrintStationWebApi.Services.DataBase
                 throw new ArgumentNullException(nameof(books));
 
             var existingBooks = await _db.Books.Where(dbBook => books.Select(book => book.Barcode).Contains(dbBook.Barcode)).ToListAsync();
-            if(existingBooks.Any())
+            if (existingBooks.Any())
                 _db.Books.RemoveRange(existingBooks); //База мизерная, поэтому не замарачивался.
 
             await _db.Books.AddRangeAsync(books);
@@ -69,7 +69,7 @@ namespace PrintStationWebApi.Services.DataBase
 
         public async Task<DataBaseBook> DeleteBookAsync(long barcode)
         {
-            if(barcode == 0)
+            if (barcode == 0)
                 throw new ArgumentException(nameof(barcode));
 
             var book = await _db.Books.FindAsync(barcode);

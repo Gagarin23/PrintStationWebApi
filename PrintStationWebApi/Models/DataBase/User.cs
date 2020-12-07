@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace PrintStationWebApi.Models.DataBase
 {
@@ -15,7 +11,7 @@ namespace PrintStationWebApi.Models.DataBase
 
         public User()
         {
-            
+
         }
 
         public User(string login, string passwordHash)

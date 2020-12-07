@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using PrintStationWebApi.Models.DataBase;
+using PrintStationWebApi.Services.DataBase;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using PrintStationWebApi.Models;
-using PrintStationWebApi.Models.DataBase;
-using PrintStationWebApi.Services;
-using PrintStationWebApi.Services.DataBase;
 
 namespace PrintStationWebApi.Controllers
 {
@@ -62,7 +60,7 @@ namespace PrintStationWebApi.Controllers
 
             var dbBook = _validateService.Validate(book).FirstOrDefault();
             dbBook = await _bookRepository.ChangeBookStateAsync(dbBook);
-            if(dbBook != null)
+            if (dbBook != null)
                 return Ok();
             return NotFound();
         }
@@ -76,7 +74,7 @@ namespace PrintStationWebApi.Controllers
 
             var id = _validateService.Parse(barcode);
             var book = await _bookRepository.DeleteBookAsync(id);
-            if(book != null)
+            if (book != null)
                 return Ok();
             return NotFound();
         }

@@ -1,19 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.IdentityModel.Tokens;
-using PrintStationWebApi.Authentication;
 using PrintStationWebApi.Models.DataBase;
 using PrintStationWebApi.Services.BL;
 using PrintStationWebApi.Services.DataBase;
+using System.Threading.Tasks;
 
 namespace PrintStationWebApi.Controllers
 {
@@ -43,14 +33,14 @@ namespace PrintStationWebApi.Controllers
         [HttpPost("/reg")]
         public async Task<IActionResult> Register(string username, string password, Role role)
         {
-            
+
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) || role == 0)
                 return BadRequest();
 
             if (username.Equals(password))
                 return BadRequest("Имя пользователя и пароль не могут совпадать");
 
-            if(await _usersRepository.SetUserAsync(username, password, role) == 1)
+            if (await _usersRepository.SetUserAsync(username, password, role) == 1)
                 return StatusCode(201);
 
             return StatusCode(500);

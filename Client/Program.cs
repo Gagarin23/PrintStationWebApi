@@ -1,11 +1,10 @@
-﻿using System;
+﻿using PrintStationWebApi.Models.BL;
+using System;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using PrintStationWebApi.Models.BL;
 
 namespace Client
 {
@@ -24,11 +23,11 @@ namespace Client
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "xxxxxxxxxxxxxxxxxxxx");
-            
+
 
             try
             {
-                
+
             }
             catch
             {
@@ -46,17 +45,18 @@ namespace Client
 
         static void Test()
         {
-            var request = new HttpRequestMessage {
+            var request = new HttpRequestMessage
+            {
                 RequestUri = new Uri("[your request url string]"),
                 Method = HttpMethod.Post,
-                Headers = 
+                Headers =
                 {
                     { "X-Version", "1" }, // HERE IS HOW TO ADD HEADERS,
                     { HttpRequestHeader.Authorization.ToString(), "[your authorization token]" },
                     { HttpRequestHeader.ContentType.ToString(), "multipart/mixed" },//use this content type if you want to send more than one content type
                 },
-                Content = new MultipartContent 
-                { 
+                Content = new MultipartContent
+                {
                 }
             };
         }

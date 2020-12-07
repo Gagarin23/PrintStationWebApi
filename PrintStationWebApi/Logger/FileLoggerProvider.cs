@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 namespace PrintStationWebApi.Logger
 {
@@ -17,7 +13,7 @@ namespace PrintStationWebApi.Logger
         {
             return new FileLogger(path);
         }
- 
+
         public void Dispose()
         {
         }

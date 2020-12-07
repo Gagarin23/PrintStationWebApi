@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using PrintStationWebApi.Models.DataBase;
+using System;
 using System.Data;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Authentication;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using PrintStationWebApi.Models.DataBase;
 
 namespace PrintStationWebApi.Services.DataBase
 {
@@ -43,16 +41,16 @@ namespace PrintStationWebApi.Services.DataBase
 
             throw new AuthenticationException("Bad username or password.");
         }
-        
+
         public async Task<int> SetUserAsync(string username, string password, Role role)
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                 throw new ArgumentNullException("username or password null or empty.");
 
             var passwordHash = Crypt.HashPassword(password);
-            var user = new User(username, passwordHash){Role = role};
+            var user = new User(username, passwordHash) { Role = role };
             var a = await _db.Users.FindAsync(user.Login);
-            if (a != null) 
+            if (a != null)
                 throw new DataException(user.Login + " уже существует.");
 
             await _db.Users.AddAsync(user);

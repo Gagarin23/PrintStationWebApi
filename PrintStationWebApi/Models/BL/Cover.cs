@@ -1,5 +1,4 @@
 ﻿using System;
-using PrintStationWebApi.Models.DataBase;
 
 namespace PrintStationWebApi.Models.BL
 {

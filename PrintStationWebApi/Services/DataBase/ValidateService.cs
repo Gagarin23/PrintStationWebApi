@@ -1,9 +1,8 @@
-﻿using System;
+﻿using PrintStationWebApi.Models.DataBase;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using PrintStationWebApi.Models.BL;
-using PrintStationWebApi.Models.DataBase;
 
 namespace PrintStationWebApi.Services.DataBase
 {
@@ -18,17 +17,17 @@ namespace PrintStationWebApi.Services.DataBase
     {
         public IEnumerable<DataBaseBook> Validate(params InputBook[] inputBooks)
         {
-            if(inputBooks == null || inputBooks.Length < 1)
+            if (inputBooks == null || inputBooks.Length < 1)
                 throw new ArgumentNullException(nameof(inputBooks));
 
             foreach (var inputBook in inputBooks)
             {
                 var dbBook = new DataBaseBook();
                 var barcode = Parse(inputBook.Barcode);
-                if (barcode != 0) 
+                if (barcode != 0)
                     dbBook.Barcode = barcode;
 
-                if (Path.HasExtension(inputBook.BlockPath) 
+                if (Path.HasExtension(inputBook.BlockPath)
                     && Path.GetExtension(inputBook.BlockPath).Equals(".pdf")
                     && inputBook.BlockCreationTime != DateTime.MinValue)
                 {
@@ -36,7 +35,7 @@ namespace PrintStationWebApi.Services.DataBase
                     dbBook.BlockCreationTime = inputBook.BlockCreationTime;
                 }
 
-                if (Path.HasExtension(inputBook.CoverPath) 
+                if (Path.HasExtension(inputBook.CoverPath)
                     && Path.GetExtension(inputBook.CoverPath).Equals(".pdf")
                     && inputBook.CoverCreationTime != DateTime.MinValue)
                 {
@@ -50,7 +49,7 @@ namespace PrintStationWebApi.Services.DataBase
 
         public long Parse(string barcode)
         {
-            if(string.IsNullOrEmpty(barcode))
+            if (string.IsNullOrEmpty(barcode))
                 throw new ArgumentNullException(nameof(barcode));
 
             long.TryParse(barcode.Replace("-", string.Empty).Replace("_", string.Empty), out long id);
@@ -64,7 +63,7 @@ namespace PrintStationWebApi.Services.DataBase
 
         public IEnumerable<long> Parse(IEnumerable<string> barcodes)
         {
-            if(barcodes == null || !barcodes.Any())
+            if (barcodes == null || !barcodes.Any())
                 throw new ArgumentNullException(nameof(barcodes));
 
             foreach (var barcode in barcodes)

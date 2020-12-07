@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.Caching.Memory;
+using PrintStationWebApi.Models.DataBase;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
-using PrintStationWebApi.Models.DataBase;
 
 namespace PrintStationWebApi.Services.Cache
 {
@@ -60,7 +60,7 @@ namespace PrintStationWebApi.Services.Cache
 
         public DataBaseBook GetBook(long barcode)
         {
-            if(barcode == 0)
+            if (barcode == 0)
                 throw new ArgumentException(nameof(barcode));
 
             return _cache.Get<DataBaseBook>(barcode);
@@ -73,7 +73,7 @@ namespace PrintStationWebApi.Services.Cache
 
             foreach (var barcode in barcodes)
             {
-                if(_cache.TryGetValue(barcode, out DataBaseBook dbBook))
+                if (_cache.TryGetValue(barcode, out DataBaseBook dbBook))
                     yield return dbBook;
             }
         }

@@ -1,16 +1,13 @@
-﻿using System;
+﻿using Microsoft.IdentityModel.Tokens;
+using PrintStationWebApi.Authentication;
+using PrintStationWebApi.Services.DataBase;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using PrintStationWebApi.Authentication;
-using PrintStationWebApi.Services.DataBase;
 
 namespace PrintStationWebApi.Services.BL
 {
@@ -36,7 +33,7 @@ namespace PrintStationWebApi.Services.BL
             var identity = await GetIdentityAsync(username, password);
             if (identity == null)
                 throw new AuthenticationException();
- 
+
             var now = DateTime.UtcNow;
 
             var jwt = new JwtSecurityToken(
@@ -47,7 +44,7 @@ namespace PrintStationWebApi.Services.BL
                 expires: now.Add(TimeSpan.FromMinutes(AuthOptions.Lifetime)),
                 signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
- 
+
             var response = new
             {
                 access_token = encodedJwt,
@@ -56,7 +53,7 @@ namespace PrintStationWebApi.Services.BL
 
             return JsonSerializer.Serialize(response);
         }
- 
+
         private async Task<ClaimsIdentity> GetIdentityAsync(string username, string password)
         {
             var user = await _usersRepository.GetUserAsync(username, password);
@@ -72,7 +69,7 @@ namespace PrintStationWebApi.Services.BL
                         ClaimsIdentity.DefaultRoleClaimType);
                 return claimsIdentity;
             }
- 
+
             return null;
         }
     }
