@@ -40,6 +40,8 @@ namespace PrintStationWebApi.Services.BL
             var now = DateTime.UtcNow;
 
             var jwt = new JwtSecurityToken(
+                issuer: AuthOptions.Issuer,
+                audience: AuthOptions.Audience,
                 notBefore: now,
                 claims: identity.Claims,
                 expires: now.Add(TimeSpan.FromMinutes(AuthOptions.Lifetime)),
