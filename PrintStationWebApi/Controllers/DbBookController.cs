@@ -21,7 +21,8 @@ namespace PrintStationWebApi.Controllers
             _validateService = validateService;
             _bookRepository = bookRepository;
         }
-        [HttpGet]
+
+        [HttpGet("/search")]
         public async Task<ActionResult<IEnumerable<InputBook>>> FindBooks([FromQuery] params string[] barcodes)
         {
             if (barcodes == null || barcodes.Length < 1)
@@ -38,7 +39,7 @@ namespace PrintStationWebApi.Controllers
             return Ok(books);
         }
 
-        [HttpPost]
+        [HttpPost("/add")]
         public async Task<ActionResult<IEnumerable<InputBook>>> AddBooks(params InputBook[] books)
         {
             if (books == null || books.Length < 1)
@@ -49,7 +50,7 @@ namespace PrintStationWebApi.Controllers
             return StatusCode(201);
         }
 
-        [HttpPatch]
+        [HttpPatch("/change")]
         public async Task<ActionResult<InputBook>> ChangeBookState(InputBook book)
         {
             if (book == null)
@@ -62,7 +63,7 @@ namespace PrintStationWebApi.Controllers
             return NotFound();
         }
 
-        [HttpDelete]
+        [HttpDelete("/delete")]
         public async Task<ActionResult<long>> DeleteBook(string barcode)
         {
             if (barcode == null)
