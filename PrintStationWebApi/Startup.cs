@@ -36,11 +36,12 @@ namespace PrintStationWebApi
             services.AddControllers();
             services.AddMemoryCache();
 
-            services.AddScoped<IValidateService, ValidateService>();
+            services.AddScoped<IBookValidateService, BookValidateService>();
             services.AddTransient<IBookRepository, BookRepository>();
             services.AddSingleton<ICacheService, CacheService>();
             services.AddScoped<IBookSortingService, BookSortingService>();
             services.AddTransient<IUsersRepository, UsersRepository>();
+            services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IAccountService, AccountService>();
 
             services.AddSwaggerGen(c =>

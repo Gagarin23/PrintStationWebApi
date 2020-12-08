@@ -6,14 +6,14 @@ using System.Linq;
 
 namespace PrintStationWebApi.Services.DataBase
 {
-    public interface IValidateService
+    public interface IBookValidateService
     {
         IEnumerable<DataBaseBook> Validate(params InputBook[] inputBooks);
         long Parse(string barcode);
         IEnumerable<long> Parse(IEnumerable<string> barcodes);
     }
 
-    public class ValidateService : IValidateService
+    public class BookValidateService : IBookValidateService
     {
         public IEnumerable<DataBaseBook> Validate(params InputBook[] inputBooks)
         {

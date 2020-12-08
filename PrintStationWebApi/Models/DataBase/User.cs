@@ -7,7 +7,7 @@ namespace PrintStationWebApi.Models.DataBase
         [Key]
         public string Login { get; set; }
         public string PasswordHash { get; set; }
-        public Role Role { get; set; }
+        public string Role { get; set; }
 
         public User()
         {

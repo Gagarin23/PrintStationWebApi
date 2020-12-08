@@ -15,14 +15,14 @@ namespace PrintStationWebApi.Controllers
     [ApiController]
     public class BlocksController : ControllerBase
     {
-        private readonly IValidateService _validateService;
+        private readonly IBookValidateService _bookValidateService;
         private readonly IBookSortingService _sortingService;
         private readonly IBookRepository _bookRepository;
         private readonly ICacheService _cacheService;
 
-        public BlocksController(IValidateService validateService, IBookSortingService sortingService, IBookRepository bookRepository, ICacheService cacheService)
+        public BlocksController(IBookValidateService bookValidateService, IBookSortingService sortingService, IBookRepository bookRepository, ICacheService cacheService)
         {
-            _validateService = validateService;
+            _bookValidateService = bookValidateService;
             _sortingService = sortingService;
             _bookRepository = bookRepository;
             _cacheService = cacheService;
@@ -35,7 +35,7 @@ namespace PrintStationWebApi.Controllers
             if (blocks == null || blocks.Length < 1)
                 return BadRequest();
 
-            var barcodes = _validateService.Parse(blocks.Select(c => c.Barcode)).ToList();
+            var barcodes = _bookValidateService.Parse(blocks.Select(c => c.Barcode)).ToList();
             var dbBooks = _cacheService.GetBooks(barcodes).ToList();
             if (dbBooks.Count < 1)
                 dbBooks = await _bookRepository.GetBooksAsync(barcodes);
@@ -46,7 +46,7 @@ namespace PrintStationWebApi.Controllers
 
             foreach (var block in blocks)
             {
-                var barcode = _validateService.Parse(block.Barcode);
+                var barcode = _bookValidateService.Parse(block.Barcode);
                 block.FullPath = dbBooks.FirstOrDefault(x => x.Barcode == barcode)?.CoverPath;
             }
 
