@@ -72,15 +72,10 @@ namespace PrintStationWebApi.Services.DataBase
             if (barcode == 0)
                 throw new ArgumentException(nameof(barcode));
 
-            var book = await _db.Books.FindAsync(barcode);
-            if (book != null)
-            {
-                _db.Books.Remove(book);
-                await _db.SaveChangesAsync();
-                return book;
-            }
-
-            return null;
+            var book = new DataBaseBook{Barcode = barcode};
+            _db.Entry(book).State = EntityState.Deleted;
+            await _db.SaveChangesAsync();
+            return book;
         }
     }
 }

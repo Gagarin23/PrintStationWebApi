@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PrintStationWebApi.Models.DataBase
 {
@@ -9,6 +10,7 @@ namespace PrintStationWebApi.Models.DataBase
     public class DataBaseBook : IEquatable<DataBaseBook>
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long Barcode { get; set; }
 
         public string BlockPath { get; set; }

@@ -19,8 +19,7 @@ namespace PrintStationWebApi.Logger
 
         public bool IsEnabled(LogLevel logLevel)
         {
-            //return logLevel == LogLevel.Trace;
-            return true;
+            return logLevel == LogLevel.Error;
         }
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)

@@ -51,7 +51,7 @@ namespace PrintStationWebApi.Services.BL
 
             var response = new
             {
-                access_token = encodedJwt,
+                access_token = "Bearer " + encodedJwt,
                 username = identity.Name
             };
 

@@ -2,11 +2,13 @@
 using PrintStationWebApi.Models.DataBase;
 using System;
 using System.Data;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security.Authentication;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using PrintStationWebApi.Logger;
 
 namespace PrintStationWebApi.Services.DataBase
 {
@@ -30,16 +32,13 @@ namespace PrintStationWebApi.Services.DataBase
         public async Task<ActionResult<User>> GetUserAsync(string username)
         {
             if (string.IsNullOrWhiteSpace(username))
-                return new NotFoundResult();
+                return new BadRequestObjectResult(nameof(username) + " is empty or null.");
 
-            try
-            {
-                return await _db.Users.FindAsync(username);
-            }
-            catch (Exception e)
-            {
-                return new ObjectResult(e.Message){StatusCode = 500};
-            }
+            var user = await _db.Users.FindAsync(username);
+            if (user != null)
+                return user;
+
+            return new NotFoundResult();
         }
 
         public async Task<ActionResult> AddUserAsync(User user)
@@ -47,16 +46,9 @@ namespace PrintStationWebApi.Services.DataBase
             if (user == null)
                 throw new ArgumentNullException();
 
-            try
-            {
-                await _db.Users.AddAsync(user);
-                await _db.SaveChangesAsync();
-                return new OkObjectResult("User has been added.");
-            }
-            catch (Exception e)
-            {
-                return new BadRequestObjectResult(e.Message){StatusCode = 500};
-            }
+            await _db.Users.AddAsync(user);
+            await _db.SaveChangesAsync();
+            return new OkObjectResult("User has been added.");
         }
 
         public async Task<ActionResult> UpdateUserAsync(User user)
@@ -64,34 +56,20 @@ namespace PrintStationWebApi.Services.DataBase
             if(user == null)
                 throw new ArgumentNullException(nameof(user));
 
-            try
-            {
-                _db.Users.Update(user);
-                await _db.SaveChangesAsync();
-                return new OkObjectResult("Role has been updated.");
-            }
-            catch (Exception e)
-            {
-                return new BadRequestObjectResult(e.Message){StatusCode = 500};
-            }
+            _db.Users.Update(user);
+            await _db.SaveChangesAsync();
+            return new OkObjectResult("Role has been updated.");
         }
 
         public async Task<ActionResult> RemoveUserAsync(string username)
         {
             if (string.IsNullOrWhiteSpace(username))
                 return new NotFoundResult();
-
-            try
-            {
-                var user = await _db.Users.FindAsync();
-                _db.Users.Remove(user);
-                await _db.SaveChangesAsync();
-                return new OkResult();
-            }
-            catch (Exception e)
-            {
-                return new ObjectResult(e.Message){StatusCode = 500};
-            }
+            
+            var user = new User{Login = username};
+            _db.Entry(user).State = EntityState.Deleted;
+            await _db.SaveChangesAsync();
+            return new OkObjectResult("User has been deleted.");
         }
     }
 }

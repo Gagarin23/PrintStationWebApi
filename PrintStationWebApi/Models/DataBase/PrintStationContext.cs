@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using PrintStationWebApi.Logger;
 
 namespace PrintStationWebApi.Models.DataBase
 {
@@ -11,5 +14,18 @@ namespace PrintStationWebApi.Models.DataBase
         {
             Database.EnsureCreated();
         }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLoggerFactory(MyLoggerFactory);
+            optionsBuilder.LogTo(Console.WriteLine);
+        }
+
+        private static readonly ILoggerFactory MyLoggerFactory = LoggerFactory.Create(builder => //todo: не работает, исправить.
+        {
+            builder.AddFilter((category, level) => category == DbLoggerCategory.Database.Command.Name)
+                .AddProvider(new FileLoggerProvider("DbLogger.txt"));
+        });
     }
 }
+
